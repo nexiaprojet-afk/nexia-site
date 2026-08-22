@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AJS - Sécurité Agencement Marketing</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;500;700;800&family=Oswald:wght@500;700&family=Montserrat:wght@400;700;900&family=Playfair+Display:wght@700&family=Cinzel:wght@700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+    /* --- 1. DESIGN SYSTEM --- */
+    :root {
+        --primary: #0b1120;
+        --accent: #dc2626;
+        --bg: #f8fafc;
+        --text: #334155;
+        --border: #e2e8f0;
+        --shadow: 0 10px 30px -10px rgba(0,0,0,0.15);
+        --idf-blue: #004494;
+        
+        /* VARIABLES POSITIONS */
+        --sign-top: 13%; --sign-left: 50%; --sign-width: 54%; --sign-height: 15%;
+        --awn-top: 29.5%; --awn-left: 50%; --awn-width: 70%; --awn-height: 10%;
+        --scr-land-top: 55%; --scr-land-left: 25%; --scr-land-w: 25%; --scr-land-h: 25%;
+        --scr-port-top: 50%; --scr-port-left: 25%; --scr-port-w: 18%; --scr-port-h: 35%;
+        --scr-totem-left: 75%;
+    }
+    
+    * { box-sizing: border-box; outline: none; scroll-behavior: smooth; }
+    body { margin: 0; font-family: 'Manrope', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; min-height: 100vh; }
+    h1, h2, h3 { color: var(--primary); margin: 0; }
+    main { flex: 1; }
+    
+    /* --- 2. HEADER & LOGO --- */
+    header {
+        position: fixed; top: 0; width: 100%; z-index: 1000;
+        background: transparent; 
+        border-bottom: none; height: 110px; /* En-tête élargi pour accueillir un grand logo */
+        display: flex; justify-content: space-between; align-items: center; padding: 0 5%;
+        transition: background-color 0.4s ease, box-shadow 0.4s ease;
+    }
+    
+    .logo-container { cursor: pointer; display: flex; align-items: center; height: 100%; }
+    
+    /* LOGO AGRANDI ET OPTIMISÉ */
+    .logo-img { 
+        height: 85px; /* Taille importante similaire au modèle de référence */
+        width: auto;
+        object-fit: contain; 
+        image-rendering: -webkit-optimize-contrast; /* Netteté maximale des pixels */
+    }
+    
+    /* Menu resserré et texte en blanc */
+    nav ul { display: flex; gap: 15px; list-style: none; margin: 0; padding: 0; align-items: center; }
+    nav button { background: none; border: none; font-weight: 700; font-size: 12px; text-transform: uppercase; color: #ffffff; cursor: pointer; padding: 5px 10px; transition: 0.3s; letter-spacing: 0.5px; }
+    nav button:hover, nav button.active { color: var(--accent); }
+    
+    /* Bouton type "Pilule" */
+    .btn-contact-nav { 
+        background: transparent !important; 
+        color: white !important; 
+        border: 2px solid white; 
+        border-radius: 30px; 
+        padding: 8px 22px; 
+        display: flex; 
+        align-items: center; 
+        gap: 8px;
+    }
+    .btn-contact-nav:hover {
+        background: white !important;
+        color: var(--primary) !important;
+    }
+
+    /* --- 3. PAGE --- */
+    .page-section { display: none; padding-top: 110px; min-height: 100vh; animation: fadeIn 0.5s ease; }
+    .page-section.active { display: block; }
+    #accueil.page-section { padding-top: 0; } 
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .container { max-width: 1200px; margin: 0 auto; padding: 50px 20px; }
+
+    /* --- 4. HERO --- */
+    .hero-clean {
+        height: 100vh; 
+        background: linear-gradient(to right, rgba(11,17,32,0.95) 0%, rgba(11,17,32,0.6) 50%, rgba(11,17,32,0.1) 100%), url('pub-protecvia.jpg') center/cover no-repeat;
+        color: white; display: flex; align-items: center; justify-content: flex-start; text-align: left;
+        padding: 0 8%;
+    }
+    .hero-content { max-width: 650px; padding: 20px 0; margin-top: 80px; }
+    .hero-title { font-size: 4rem; font-weight: 900; line-height: 1.1; margin-bottom: 25px; color: white; text-transform: uppercase; }
+    .hero-subtitle { font-size: 1.3rem; font-weight: 400; color: #e2e8f0; margin-bottom: 40px; line-height: 1.5; }
+    .text-slider { display: none; animation: slideUp 1s ease; }
+    .text-slider.active { display: block; }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* --- 5. MARKETING STUDIO --- */
+    .mkt-view { display: none; animation: fadeIn 0.4s; }
+    .mkt-view.active { display: block; }
+    
+    .hub-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 25px; margin-top: 30px; }
+    .hub-card {
+        background: white; border-radius: 16px; padding: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); 
+        border: 1px solid var(--border); cursor: pointer; transition: all 0.3s ease; 
+        display: flex; align-items: center; gap: 25px; text-align: left;
+    }
+    .hub-card:hover { transform: translateY(-5px); border-color: var(--accent); box-shadow: 0 15px 30px rgba(220,38,38,0.1); }
+    
+    .hub-icon-wrapper {
+        width: 80px; height: 80px; min-width: 80px; background: #f8fafc; border: 1px solid var(--border);
+        color: var(--primary); border-radius: 16px; display: flex; align-items: center; justify-content: center; 
+        font-size: 2.2rem; transition: 0.3s;
+    }
+    .hub-card:hover .hub-icon-wrapper { background: var(--accent); color: white; border-color: var(--accent); transform: scale(1.05); }
+    
+    .hub-body { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 0; }
+    .hub-body h3 { font-size: 1.3rem; margin-bottom: 6px; color: var(--primary); }
+    .hub-body p { font-size: 0.95rem; color: #64748b; margin-bottom: 15px; line-height: 1.4; margin-top: 0; }
+    
+    .hub-btn { 
+        align-self: flex-start; font-size: 0.85rem; font-weight: 800; color: var(--accent); 
+        display: flex; align-items: center; gap: 6px; text-transform: uppercase; letter-spacing: 1px;
+        padding: 0; border: none; background: none; margin-top: 0; cursor: pointer;
+    }
+    .hub-btn i { font-size: 0.75rem; transition: 0.3s; }
+    .hub-card:hover .hub-btn i { transform: translateX(5px); }
+
+    /* Studio Layout */
+    .back-nav { margin-bottom: 20px; }
+    .btn-back { display: inline-flex; align-items: center; gap: 10px; background: white; border: 1px solid var(--border); padding: 10px 20px; border-radius: 30px; cursor: pointer; font-weight: 700; color: var(--text); }
+    .marketing-intro { margin-bottom: 30px; animation: fadeIn 0.5s; }
+    .marketing-intro h3 { font-size: 1.8rem; margin-bottom: 15px; }
+    .info-subtitle { font-size: 0.9rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; margin: 25px 0 15px; letter-spacing: 1px; }
+
+    .studio-box { display: flex; flex-wrap: wrap; background: white; border-radius: 20px; overflow: hidden; box-shadow: var(--shadow); border: 1px solid var(--border); }
+    
+    .studio-controls { flex: 2; min-width: 350px; padding: 40px; background: white; border-right: 1px solid #eee; max-height: 800px; overflow-y: auto; }
+    .studio-visual { flex: 3; min-width: 500px; background: #e2e8f0; padding: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; perspective: 1000px; }
+
+    .disclaimer-alert { font-size: 0.85rem; color: var(--accent); font-weight: 800; background: #fee2e2; padding: 12px 15px; border-radius: 8px; margin-bottom: 25px; border: 1px solid #f87171; display: flex; align-items: center; gap: 8px; line-height: 1.4; }
+
+    /* === STYLES SPECIFIQUES SECTION WEB === */
+    .web-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; margin-bottom: 50px; }
+    .web-item { background: white; padding: 40px; border-radius: 16px; border: 1px solid var(--border); box-shadow: var(--shadow); transition: 0.3s; position: relative; overflow: hidden; }
+    .web-item:hover { transform: translateY(-5px); border-color: var(--primary); }
+    .web-item::before { content:''; position:absolute; top:0; left:0; width:4px; height:100%; background:var(--border); transition:0.3s; }
+    .web-item:hover::before { background:var(--accent); }
+    .web-icon { font-size: 2rem; color: var(--primary); margin-bottom: 20px; display: block; }
+    .web-title { font-family: 'Oswald', sans-serif; font-size: 1.3rem; margin-bottom: 15px; color: var(--primary); text-transform: uppercase; }
+    .web-list { list-style: none; padding: 0; margin: 0; }
+    .web-list li { margin-bottom: 8px; font-size: 0.95rem; color: #475569; padding-left: 15px; position: relative; }
+    .web-list li::before { content: '•'; color: var(--accent); position: absolute; left: 0; font-weight: bold; }
+
+    /* === VISUALISATION === */
+    .visual-wrapper { position: relative; width: 100%; max-width: 100%; line-height: 0; transform-style: preserve-3d; }
+    .base-img { width: 100%; height: auto; display: block; }
+
+    /* CALQUE ENSEIGNE */
+    .sign-overlay-container {
+        position: absolute; top: var(--sign-top); left: var(--sign-left); transform: translateX(-50%);
+        width: var(--sign-width); height: var(--sign-height);
+        z-index: 10; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;
+    }
+    .sign-text-display { 
+        font-family: 'Montserrat', sans-serif; font-weight: 900; text-transform: uppercase; 
+        font-size: 2.8vw; white-space: nowrap; transition: 0.3s; line-height: 1;
+    }
+    .mode-caisson { border: 3px solid rgba(200,200,200,0.8); box-shadow: 0 0 20px rgba(255,255,255,0.5), inset 0 0 30px rgba(255,255,255,0.2); }
+    .mode-relief .sign-text-display { 
+        text-shadow: 1px 1px 0 #555, 2px 2px 0 #555, 3px 3px 0 #555, 4px 4px 0 #555, 6px 6px 10px rgba(0,0,0,0.6), 10px 10px 20px rgba(0,0,0,0.4); 
+    }
+
+    /* CALQUE STORE */
+    .awning-overlay-fabric {
+        position: absolute; top: var(--awn-top); left: var(--awn-left); transform: translateX(-50%);
+        width: var(--awn-width); height: var(--awn-height);
+        background-color: #0f172a; opacity: 1; z-index: 5; transition: background-color 0.3s;
+        clip-path: polygon(2% 0%, 98% 0%, 100% 100%, 0% 100%);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+    }
+    .awning-overlay-valance {
+        position: absolute; top: calc(var(--awn-top) + var(--awn-height) - 0.5%); left: var(--awn-left); transform: translateX(-50%);
+        width: var(--awn-width); height: 6%; background-color: #0f172a; opacity: 1; z-index: 6;
+        display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+    }
+    .store-text-display { font-family: 'Oswald', sans-serif; font-size: 1.3vw; color: rgba(255,255,255,0.8); text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
+    
+    .led-active { 
+        color: #ffffff !important; 
+        text-shadow: 0 0 5px #fff, 0 0 15px #fff, 0 0 25px #fcd34d, 0 0 40px #fbbf24 !important; 
+    }
+
+    /* CALQUE ECRAN */
+    .screen-container { position: absolute; display: none; z-index: 20; transform-style: preserve-3d; transform: rotateY(-5deg) translateZ(10px); transition: all 0.5s; }
+    .screen-container.active { display: block; }
+    .screen-frame { width: 100%; height: 100%; background: #000; border: 4px solid #222; box-shadow: 0 0 20px rgba(0,0,0,0.6), inset 0 0 10px rgba(255,255,255,0.1); overflow: hidden; position: relative; }
+    .screen-frame::after { content: ''; position: absolute; top:0; left:0; right:0; bottom:0; background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 50%); pointer-events: none; z-index: 2; }
+    .screen-content-img { width: 100%; height: 100%; object-fit: cover; }
+    .mode-landscape { top: var(--scr-land-top); left: var(--scr-land-left); width: var(--scr-land-w); height: var(--scr-land-h); }
+    .mode-portrait { top: var(--scr-port-top); left: var(--scr-port-left); width: var(--scr-port-w); height: var(--scr-port-h); }
+    .mode-totem { top: auto; bottom: 5%; left: var(--scr-totem-left); width: 15%; height: 45%; transform: rotateY(-10deg) translateZ(30px); }
+    .totem-base { position: absolute; bottom: -15%; left: 50%; transform: translateX(-50%); width: 60%; height: 15%; background: linear-gradient(to right, #333, #666, #333); display: none; z-index: -1; }
+    .mode-totem .totem-base { display: block; }
+
+    /* --- CONSOLE DE CALIBRAGE --- */
+    .calibration-panel { background: #222; color: #eee; padding: 20px; width: 100%; display: none; font-size: 0.85rem; border-top: 2px solid var(--accent); margin-top: 15px; position: absolute; bottom: 0; left: 0; z-index: 100; }
+    .calib-row { display: flex; gap: 15px; margin-bottom: 10px; align-items: center; }
+    .calib-row label { width: 70px; font-weight: 700; }
+    .calib-row input[type=range] { flex: 1; cursor: pointer; }
+    .btn-calib-toggle { background: #333; color: white; border: none; padding: 10px 20px; cursor: pointer; font-size: 0.8rem; margin-top: 15px; border-radius: 4px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; align-self: flex-start; position: relative; z-index: 200; }
+    .btn-calib-toggle:hover { background: #444; }
+
+    /* CONTROLES UI */
+    .control-group { margin-bottom: 25px; border-bottom: 1px solid #f1f5f9; padding-bottom: 15px; }
+    .control-group:last-child { border-bottom: none; }
+    .control-label { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: #94a3b8; display: block; margin-bottom: 10px; }
+    .form-input, .form-select { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-family: inherit; font-size: 0.95rem; font-weight: 600; background:white; }
+    .swatch-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+    .swatch { width: 32px; height: 32px; border-radius: 50%; cursor: pointer; border: 2px solid #e2e8f0; transition: 0.2s; position: relative; }
+    .swatch:hover { transform: scale(1.15); border-color: #333; z-index: 2; }
+    .swatch.selected { border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary); }
+    .btn-action { width: 100%; padding: 16px; border: none; border-radius: 8px; font-weight: 700; font-size: 1rem; cursor: pointer; background: var(--primary); color: white; transition: 0.2s; }
+    .btn-action:hover { background: var(--accent); }
+    .idf-alert { background: #eff6ff; border-left: 4px solid var(--idf-blue); padding: 15px; margin-bottom: 20px; font-size: 0.9rem; color: #1e3a8a; border-radius: 4px; display: flex; align-items: center; gap: 10px; }
+    .screen-type-selector { display: flex; gap: 10px; margin-bottom: 20px; }
+    .screen-type-btn { flex: 1; padding: 10px; border: 1px solid var(--border); background: white; cursor: pointer; border-radius: 6px; font-weight: 600; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+    .screen-type-btn.active { border-color: var(--primary); color: var(--primary); background: #f1f5f9; }
+
+    /* CARDS & DETAILS */
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+    .card { background: white; padding: 40px 30px; border-radius: 16px; box-shadow: var(--shadow); border-top: 4px solid var(--primary); cursor: pointer; transition: 0.3s; text-align: center; }
+    .card:hover { transform: translateY(-10px); border-color: var(--accent); border-top-color: var(--accent); }
+    .card i { font-size: 50px; color: var(--primary); margin-bottom: 20px; }
+    .card h3 { font-size: 1.4rem; margin-bottom: 10px; }
+    .card p { color: #64748b; font-size: 0.95rem; }
+    .info-panel { margin-top: 40px; background: white; padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-left: 6px solid var(--primary); display: none; }
+    .info-panel.visible { display: block; animation: fadeIn 0.5s; }
+    .info-title { font-size: 1.5rem; font-weight: 800; color: var(--primary); margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
+    .info-desc { font-size: 1rem; color: #334155; line-height: 1.7; margin-bottom: 20px; }
+    .check-list li { display: flex; gap: 10px; margin-bottom: 8px; color: #475569; }
+    .check-list li i { color: var(--success); }
+    .info-btn { margin-top: 30px; display: inline-block; padding: 12px 30px; background: var(--primary); color: white; border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+    
+    /* CONTACT & ABOUT */
+    .contact-wrapper { max-width: 800px; margin: 0 auto; background: white; padding: 50px; border-radius: 24px; box-shadow: var(--shadow); }
+    .radio-group { display: flex; gap: 20px; margin-bottom: 20px; padding: 15px; background: #f1f5f9; border-radius: 8px; }
+    .checkbox-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
+    .checkbox-item { display: flex; align-items: center; gap: 10px; font-size: 0.95rem; cursor: pointer; background: white; padding: 10px; border: 1px solid #e2e8f0; border-radius: 6px; }
+    .hidden { display: none; }
+    
+    .about-section-box { background: white; border-radius: 16px; padding: 40px; box-shadow: var(--shadow); margin-bottom: 30px; border-left: 4px solid var(--accent); }
+    
+    /* FOOTER */
+    footer { background: var(--primary); color: white; padding: 40px 20px; text-align: center; margin-top: 50px; font-size: 0.95rem; border-top: 4px solid var(--accent); }
+    footer h4 { color: white; font-family: 'Oswald', sans-serif; letter-spacing: 1px; font-size: 1.5rem; margin-bottom: 10px; }
+    footer p { color: #cbd5e1; margin-bottom: 5px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+
+</style>
+</head>
+<body>
+
+<header id="main-header">
+    <div class="logo-container" onclick="switchTab('accueil')">
+        <img src="logo.png" alt="AJS Logo" class="logo-img">
+    </div>
+    <nav>
+        <ul>
+            <li><button onclick="switchTab('accueil')" id="nav-accueil">Accueil</button></li>
+            <li><button onclick="switchTab('buraliste')" id="nav-buraliste">Buralistes</button></li>
+            <li><button onclick="switchTab('marketing')" id="nav-marketing">Marketing</button></li>
+            <li><button onclick="switchTab('pro')" id="nav-pro">Pro</button></li>
+            <li><button onclick="switchTab('particulier')" id="nav-particulier">Particulier</button></li>
+            <li><button onclick="switchTab('about')" id="nav-about">Qui sommes-nous</button></li>
+            <li><button onclick="switchTab('contact')" class="btn-contact-nav"><i class="fas fa-file-invoice"></i> Étude Gratuite</button></li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+
+    <!-- ACCUEIL -->
+    <section id="accueil" class="page-section active">
+        <div class="hero-clean">
+            <div class="hero-content">
+                <div id="t1" class="text-slider active"><h1 class="hero-title">SÉCURITÉ ÉLECTRONIQUE</h1><p class="hero-subtitle">Installez un système de sécurité intelligent pour protéger votre commerce, vos biens et ceux que vous aimez avec notre vidéosurveillance IA & Alarme Connectée.</p></div>
+                <div id="t2" class="text-slider"><h1 class="hero-title">PROTECTION PHYSIQUE</h1><p class="hero-subtitle">La première barrière contre l'intrusion. Sécurisez vos accès stratégiques avec notre gamme de blindage, coffres-forts et grilles certifiées.</p></div>
+                <div id="t3" class="text-slider"><h1 class="hero-title">AGENCEMENT & MARKETING</h1><p class="hero-subtitle">Attirez l'œil et modernisez votre image de marque grâce à nos enseignes lumineuses, stores sur-mesure et solutions d'affichage dynamique.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BURALISTE -->
+    <section id="buraliste" class="page-section">
+        <div class="container">
+            <h2 style="text-align:center; margin-bottom:50px;">PROGRAMME BURALISTES</h2>
+            <div class="grid-3">
+                <div class="card" onmouseenter="showDetail('bur-secu', 'panel-bur')">
+                    <i class="fas fa-lock"></i>
+                    <h3>AIDE SÉCURITÉ</h3>
+                    <p style="color:var(--accent); font-weight:700;">10 000 € HT Subvention</p>
+                </div>
+                <div class="card" onmouseenter="showDetail('bur-trans', 'panel-bur')">
+                    <i class="fas fa-hammer"></i>
+                    <h3>FONDS DE TRANSFORMATION</h3>
+                    <p style="color:var(--primary); font-weight:700;">33 000 € HT Subvention</p>
+                </div>
+            </div>
+            
+            <div id="panel-bur" class="info-panel">
+                <div id="bur-secu" class="detail-content">
+                    <div class="info-title"><i class="fas fa-shield-alt"></i> AIDE SÉCURITÉ DOUANE</div>
+                    <div class="info-desc">Sécurisez votre débit de tabac avec l'aide financière des Douanes (plafond de <strong>10 000 €</strong> par cycle). Nous vous équipons avec du matériel certifié 100% éligible : Vidéoprotection, Alarme, Coffres-forts, Rideaux métalliques et Brouillard.</div>
+                    <div class="info-subtitle">GARANTIE PRIX</div>
+                    <ul class="check-list">
+                        <li><i class="fas fa-check"></i> <strong>Tarifs Réglementés :</strong> Nos devis s'alignent strictement sur la grille tarifaire officielle des Douanes par matériel.</li>
+                        <li><i class="fas fa-check"></i> <strong>Zéro Surprise :</strong> Vous maîtrisez parfaitement votre reste à charge.</li>
+                        <li><i class="fas fa-check"></i> <strong>Conformité :</strong> Nous gérons la validité technique du dossier.</li>
+                    </ul>
+                    <div class="info-btn" onclick="transferGeneric('Buraliste - Sécurité')">DEMANDER UN DEVIS</div>
+                </div>
+
+                <div id="bur-trans" class="detail-content" style="display:none;">
+                    <div class="info-title"><i class="fas fa-hammer"></i> FONDS DE TRANSFORMATION</div>
+                    <div class="info-desc">Devenez un commerce d'utilité locale. Bénéficiez d'une prise en charge de <strong>30% à 50%</strong> de vos travaux HT, dans la limite de <strong>33 000 €</strong> d'aide. Une opportunité unique pour moderniser votre agencement, votre façade et votre offre.</div>
+                    <div class="info-subtitle">NOTRE ACCOMPAGNEMENT</div>
+                    <ul class="check-list">
+                        <li><i class="fas fa-check"></i> <strong>Audit Préalable :</strong> Accompagnement dès l'étape obligatoire de l'audit.</li>
+                        <li><i class="fas fa-check"></i> <strong>Transformation Globale :</strong> Financement partant de la carotte, mobilier, vitrine, stores, écran jusqu'à la rénovation de chaque pièce de votre commerce (peinture, carrelage, électricité, plomberie...)</li>
+                        <li><i class="fas fa-check"></i> <strong>Clé en main :</strong> Nous concevons le projet pour respecter les critères d'éligibilité (mixité extérieur/intérieur).</li>
+                    </ul>
+                    <div class="info-btn" onclick="transferScreen()">DEMANDER UN DEVIS</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MARKETING STUDIO -->
+    <section id="marketing" class="page-section">
+        <div class="container">
+            <div id="mkt-hub" class="mkt-view active">
+                <h2 style="text-align:center; margin-bottom:40px;">STUDIO MARKETING</h2>
+                <div class="hub-grid">
+                    <div class="hub-card" onclick="openTool('store')">
+                        <div class="hub-icon-wrapper"><i class="fas fa-umbrella"></i></div>
+                        <div class="hub-body">
+                            <h3>Store Banne</h3>
+                            <p>Habillez votre façade et protégez votre vitrine avec élégance.</p>
+                            <span class="hub-btn">Configurer <i class="fas fa-arrow-right"></i></span>
+                        </div>
+                    </div>
+                    
+                    <div class="hub-card" onclick="openTool('sign')">
+                        <div class="hub-icon-wrapper"><i class="fas fa-store"></i></div>
+                        <div class="hub-body">
+                            <h3>Enseigne 3D</h3>
+                            <p>Affirmez votre image de marque avec un lettrage lumineux premium.</p>
+                            <span class="hub-btn">Configurer <i class="fas fa-arrow-right"></i></span>
+                        </div>
+                    </div>
+                    
+                    <div class="hub-card" onclick="openTool('screen')">
+                        <div class="hub-icon-wrapper"><i class="fas fa-tv"></i></div>
+                        <div class="hub-body">
+                            <h3>Écran Vitrine</h3>
+                            <p>Dynamisez votre communication avec l'affichage digital haute luminosité.</p>
+                            <span class="hub-btn">Configurer <i class="fas fa-arrow-right"></i></span>
+                        </div>
+                    </div>
+                    
+                    <div class="hub-card" onclick="openTool('web')">
+                        <div class="hub-icon-wrapper"><i class="fas fa-laptop-code"></i></div>
+                        <div class="hub-body">
+                            <h3>Site Web</h3>
+                            <p>Création de votre vitrine digitale sur-mesure et performante.</p>
+                            <span class="hub-btn">Découvrir <i class="fas fa-arrow-right"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TOOL STORE -->
+            <div id="tool-store" class="mkt-view">
+                <div class="back-nav"><button class="btn-back" onclick="closeTool()"><i class="fas fa-arrow-left"></i> Retour Menu</button></div>
+                <div class="marketing-intro">
+                    <h3><i class="fas fa-umbrella" style="color:var(--accent);"></i> STORE BANNE SUR-MESURE</h3>
+                    <div class="info-desc">Alliez confort thermique et visibilité. Nos toiles techniques 100% acrylique protègent votre vitrine et vos clients du soleil tout en offrant un support de communication élégant et durable.</div>
+                    <div class="info-subtitle">LES AVANTAGES CLÉS</div>
+                    <ul class="check-list">
+                        <li><i class="fas fa-check"></i> <strong>Protection Solaire :</strong> Réduit la chaleur et protège les produits en vitrine.</li>
+                        <li><i class="fas fa-check"></i> <strong>Esthétique :</strong> Habille la façade et apporte une touche haut de gamme.</li>
+                        <li><i class="fas fa-check"></i> <strong>Personnalisation :</strong> Lambrequin (la bordure) marquable avec votre texte.</li>
+                    </ul>
+                </div>
+                
+                <div class="studio-box">
+                    <!-- PARTIE GAUCHE : CONTRÔLES ET TEXTE -->
+                    <div class="studio-controls">
+                        <div class="disclaimer-alert"><i class="fas fa-info-circle"></i> * Simulateur à titre illustratif. Nos créations réelles sont 100% sur mesure.</div>
+                        <div class="control-label">Couleur Toile</div>
+                        <div class="swatch-grid">
+                            <div class="swatch" style="background:#0f172a" onclick="setAwnColor('#0f172a')"></div>
+                            <div class="swatch" style="background:#dc2626" onclick="setAwnColor('#dc2626')"></div>
+                            <div class="swatch" style="background:#f59e0b" onclick="setAwnColor('#f59e0b')"></div>
+                            <div class="swatch" style="background:#10b981" onclick="setAwnColor('#10b981')"></div>
+                            <div class="swatch" style="background:#e2e8f0" onclick="setAwnColor('#e2e8f0')"></div>
+                        </div>
+                        <div class="control-group" style="margin-top:20px;">
+                            <label class="control-label">Typographie</label>
+                            <select id="awnFont" class="form-select" onchange="updateAwnText()">
+                                <option value="'Oswald', sans-serif">Oswald (Standard)</option>
+                                <option value="'Montserrat', sans-serif">Montserrat (Moderne)</option>
+                                <option value="'Playfair Display', serif">Playfair (Luxe)</option>
+                                <option value="'Cinzel', serif">Cinzel (Prestige)</option>
+                                <option value="'Dancing Script', cursive">Dancing Script (Manuscrit)</option>
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Texte Lambrequin</label>
+                            <input type="text" id="awnInput" class="form-input" placeholder="Votre enseigne..." oninput="updateAwnText()">
+                        </div>
+                        <div class="control-group">
+                            <label style="cursor:pointer; display:flex; align-items:center; gap:10px;">
+                                <input type="checkbox" id="awnLed" onchange="toggleAwnLed()"> <strong>Option Écriture Lumineuse</strong>
+                            </label>
+                        </div>
+                        <button class="btn-action" onclick="transferStore()">DEMANDER UN DEVIS</button>
+                    </div>
+
+                    <!-- PARTIE DROITE : SIMULATION VISUELLE -->
+                    <div class="studio-visual" style="flex-direction:column;">
+                        <div class="visual-wrapper">
+                            <img src="facade.jpg" class="base-img" alt="Façade Vierge" onerror="this.src='https://images.unsplash.com/photo-1555447012-70fb98030237?auto=format&fit=crop&w=1200&q=80'">
+                            <div id="awningFabric" class="awning-overlay-fabric"></div>
+                            <div id="awningValance" class="awning-overlay-valance"><span id="storeTextDisplay" class="store-text-display">AJS</span></div>
+                        </div>
+                        <button class="btn-calib-toggle" onclick="toggleCalib('calib-store', this)"><i class="fas fa-ruler-combined"></i> CALIBRER LE STORE</button>
+                        <div id="calib-store" class="calibration-panel">
+                            <div class="calib-row"><label>Haut</label><input type="range" min="0" max="100" value="29.5" step="0.5" oninput="updateCalib('awn-top', this.value)"></div>
+                            <div class="calib-row"><label>Gauche</label><input type="range" min="0" max="100" value="50" step="0.5" oninput="updateCalib('awn-left', this.value)"></div>
+                            <div class="calib-row"><label>Largeur</label><input type="range" min="0" max="100" value="70" step="0.5" oninput="updateCalib('awn-width', this.value)"></div>
+                            <div class="calib-row"><label>Hauteur</label><input type="range" min="0" max="30" value="10" step="0.5" oninput="updateCalib('awn-height', this.value)"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TOOL SIGN -->
+            <div id="tool-sign" class="mkt-view">
+                <div class="back-nav"><button class="btn-back" onclick="closeTool()"><i class="fas fa-arrow-left"></i> Retour Menu</button></div>
+                <div class="marketing-intro">
+                    <h3><i class="fas fa-store" style="color:var(--accent);"></i> ENSEIGNE LUMINEUSE & 3D</h3>
+                    <div class="info-desc">Votre signature visuelle, de jour comme de nuit. Optez pour l'impact du relief 3D ou la modernité du caisson lumineux pour capter l'attention et affirmer votre image de marque dès le premier regard.</div>
+                    <div class="info-subtitle">POURQUOI INVESTIR ?</div>
+                    <ul class="check-list">
+                        <li><i class="fas fa-check"></i> <strong>Visibilité Maximale :</strong> Attire le regard 24h/24 grâce aux LED.</li>
+                        <li><i class="fas fa-check"></i> <strong>Image de Marque :</strong> Renforce le professionnalisme et la crédibilité.</li>
+                        <li><i class="fas fa-check"></i> <strong>Durabilité :</strong> Matériaux résistants aux intempéries (Alu, PMMA).</li>
+                    </ul>
+                </div>
+
+                <div class="studio-box">
+                    <!-- PARTIE GAUCHE : CONTRÔLES ET TEXTE -->
+                    <div class="studio-controls">
+                        <div class="disclaimer-alert"><i class="fas fa-info-circle"></i> * Simulateur à titre illustratif. Fabrication 100% sur mesure selon votre façade.</div>
+                        <div class="control-group">
+                            <label class="control-label">Type d'Enseigne</label>
+                            <select id="signType" class="form-select" onchange="updateSign()">
+                                <option value="caisson">Caisson Lumineux (Fond plein)</option>
+                                <option value="relief">Lettres en Relief 3D (Sans fond)</option>
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Typographie</label>
+                            <select id="signFont" class="form-select" onchange="updateSign()">
+                                <option value="'Montserrat', sans-serif">Montserrat (Moderne)</option>
+                                <option value="'Oswald', sans-serif">Oswald (Industriel)</option>
+                                <option value="'Playfair Display', serif">Playfair (Luxe)</option>
+                                <option value="'Cinzel', serif">Cinzel (Prestige)</option>
+                                <option value="'Dancing Script', cursive">Dancing Script (Manuscrit)</option>
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Couleur Texte</label>
+                            <div class="swatch-grid">
+                                <div class="swatch" style="background:#ffffff" onclick="setSignColor('text', '#ffffff')"></div>
+                                <div class="swatch" style="background:#0f172a" onclick="setSignColor('text', '#0f172a')"></div>
+                                <div class="swatch" style="background:#dc2626" onclick="setSignColor('text', '#dc2626')"></div>
+                                <div class="swatch" style="background:#d4af37" onclick="setSignColor('text', '#d4af37')"></div>
+                                <div class="swatch" style="background:#10b981" onclick="setSignColor('text', '#10b981')"></div>
+                            </div>
+                        </div>
+                        <div class="control-group" id="boxColorGroup">
+                            <label class="control-label">Couleur Caisson</label>
+                            <div class="swatch-grid">
+                                <div class="swatch" style="background:#0f172a" onclick="setSignColor('box', '#0f172a')"></div>
+                                <div class="swatch" style="background:#ffffff" onclick="setSignColor('box', '#ffffff')"></div>
+                                <div class="swatch" style="background:#262626" onclick="setSignColor('box', '#262626')"></div>
+                                <div class="swatch" style="background:#dc2626" onclick="setSignColor('box', '#dc2626')"></div>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">Texte</label>
+                            <input type="text" id="signText" class="form-input" value="AJS" oninput="updateSign()">
+                        </div>
+                        <div class="control-group" id="groupSignLed" style="display:none;">
+                            <label style="cursor:pointer; display:flex; align-items:center; gap:10px;">
+                                <input type="checkbox" id="signLed" onchange="updateSign()"> <strong>Option Écriture Lumineuse</strong>
+                            </label>
+                        </div>
+                        <button class="btn-action" onclick="transferSign()">DEMANDER UN DEVIS</button>
+                    </div>
+
+                    <!-- PARTIE DROITE : SIMULATION VISUELLE -->
+                    <div class="studio-visual" style="flex-direction:column;">
+                        <div class="visual-wrapper">
+                            <img src="facade.jpg" class="base-img" alt="Façade Vierge" onerror="this.src='https://images.unsplash.com/photo-1555447012-70fb98030237?auto=format&fit=crop&w=1200&q=80'">
+                            <div id="signContainer" class="sign-overlay-container">
+                                <span id="signTextDisplay" class="sign-text-display">AJS</span>
+                            </div>
+                        </div>
+                        <button class="btn-calib-toggle" onclick="toggleCalib('calib-sign', this)"><i class="fas fa-ruler-combined"></i> CALIBRER L'ENSEIGNE</button>
+                        <div id="calib-sign" class="calibration-panel">
+                            <div class="calib-row"><label>Haut</label><input type="range" min="0" max="100" value="13" step="0.5" oninput="updateCalib('sign-top', this.value)"></div>
+                            <div class="calib-row"><label>Gauche</label><input type="range" min="0" max="100" value="50" step="0.5" oninput="updateCalib('sign-left', this.value)"></div>
+                            <div class="calib-row"><label>Largeur</label><input type="range" min="0" max="100" value="54" step="0.5" oninput="updateCalib('sign-width', this.value)"></div>
+                            <div class="calib-row"><label>Hauteur</label><input type="range" min="0" max="30" value="15" step="0.5" oninput="updateCalib('sign-height', this.value)"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TOOL SCREEN -->
+            <div id="tool-screen" class="mkt-view">
+                <div class="back-nav"><button class="btn-back" onclick="closeTool()"><i class="fas fa-arrow-left"></i> Retour Menu</button></div>
+                <div class="marketing-intro">
+                    <h3><i class="fas fa-tv" style="color:var(--accent);"></i> AFFICHAGE DYNAMIQUE DIGITAL</h3>
+                    <div class="info-desc">
+                        Révolutionnez votre communication en vitrine avec une solution clé en main. 
+                        <strong>Notre studio conçoit sur mesure vos photos et vidéos publicitaires</strong> pour garantir un impact maximal auprès des passants, projetées directement sur nos écrans vitrines haute luminosité.
+                    </div>
+                    <div class="info-subtitle">VOTRE COMMUNICATION PILOTÉE DEPUIS VOTRE SMARTPHONE</div>
+                    <ul class="check-list">
+                        <li><i class="fas fa-paint-brush"></i> <strong>Création Sur-Mesure :</strong> Conception par nos experts de spots vidéos ou d'images publicitaires adaptés à vos offres.</li>
+                        <li><i class="fas fa-mobile-alt"></i> <strong>Application Simple & Intuitive :</strong> Programmez les horaires de projection de vos publicités, mettez à jour vos playlists et gérez le tout à distance via notre application mobile.</li>
+                        <li><i class="fas fa-sun"></i> <strong>Écran Haute Luminosité :</strong> Des écrans conçus pour capter le regard, même en plein soleil (jusqu'à 4000 nits).</li>
+                    </ul>
+                </div>
+
+                <div class="studio-box">
+                    <!-- PARTIE GAUCHE : CONTRÔLES ET TEXTE -->
+                    <div class="studio-controls">
+                        <div class="disclaimer-alert"><i class="fas fa-info-circle"></i> * Simulation à titre illustratif. Formats et supports ajustés selon votre vitrine réelle.</div>
+                        <div class="idf-alert"><i class="fas fa-gift"></i> <strong>Aide IDF :</strong> Jusqu'à 1500€ remboursés sur ce matériel.</div>
+                        <div class="control-group">
+                            <label class="control-label">Type d'Affichage</label>
+                            <div class="screen-type-selector">
+                                <div class="screen-type-btn active" onclick="setScreenMode('landscape', this)"><i class="fas fa-tv"></i> Paysage</div>
+                                <div class="screen-type-btn" onclick="setScreenMode('portrait', this)"><i class="fas fa-mobile-alt"></i> Portrait</div>
+                                <div class="screen-type-btn" onclick="setScreenMode('totem', this)"><i class="fas fa-sign"></i> Totem</div>
+                            </div>
+                        </div>
+                        <button class="btn-action" onclick="transferScreen()">DEMANDER UN DEVIS</button>
+                    </div>
+
+                    <!-- PARTIE DROITE : SIMULATION VISUELLE -->
+                    <div class="studio-visual">
+                        <div class="visual-wrapper">
+                            <img src="facade.jpg" class="base-img" alt="Façade" onerror="this.src='https://images.unsplash.com/photo-1555447012-70fb98030237?auto=format&fit=crop&w=1200&q=80'">
+                            <div id="screenContainer" class="screen-container active mode-landscape">
+                                <div class="screen-frame">
+                                    <img src="pub-protecvia.jpg" class="screen-content-img" alt="Ecran Pub" onerror="this.src='https://images.unsplash.com/photo-1595856983796-03738e4df577?auto=format&fit=crop&w=600&q=80'">
+                                </div>
+                                <div class="totem-base"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TOOL WEB -->
+            <div id="tool-web" class="mkt-view">
+                <div class="back-nav"><button class="btn-back" onclick="closeTool()"><i class="fas fa-arrow-left"></i> Retour Menu</button></div>
+                
+                <div class="container" style="max-width:1000px; padding:0;">
+                    <div class="marketing-intro" style="text-align:center; margin-bottom:50px;">
+                        <h3 style="font-size:2.5rem; margin-bottom:10px;">CRÉATION DE SITES WEB SUR MESURE</h3>
+                        <p style="font-size:1.2rem; color:var(--accent); font-weight:700; letter-spacing:1px; text-transform:uppercase;">L’excellence digitale au service de votre image</p>
+                        <div class="info-desc" style="max-width:700px; margin:20px auto;">Nous concevons des sites internet pensés comme de véritables vitrines digitales haut de gamme. Chaque détail est étudié pour refléter l’identité, les valeurs et l’ambition de votre entreprise.</div>
+                        <div style="display:inline-block; font-size: 0.85rem; color: var(--accent); font-weight: 800; background: #fee2e2; padding: 10px 15px; border-radius: 6px; margin-top: 10px; border: 1px solid #f87171;">
+                            <i class="fas fa-info-circle"></i> * Tous nos projets web sont 100% sur mesure, et créés de manière exclusive pour votre marque.
+                        </div>
+                    </div>
+
+                    <div class="web-grid">
+                        <div class="web-item">
+                            <i class="fas fa-palette web-icon"></i>
+                            <h4 class="web-title">Direction Artistique & Identité</h4>
+                            <p style="font-style:italic; margin-bottom:15px; color:#64748b;">"Votre site ne doit pas seulement être beau. Il doit marquer."</p>
+                            <ul class="web-list">
+                                <li>Création ou refonte de logo</li>
+                                <li>Élaboration de charte graphique complète</li>
+                                <li>Choix typographiques et palette stratégique</li>
+                                <li>Web design exclusif, conçu sur mesure</li>
+                            </ul>
+                        </div>
+                        <div class="web-item">
+                            <i class="fas fa-chess web-icon"></i>
+                            <h4 class="web-title">Stratégie & Positionnement</h4>
+                            <p style="font-style:italic; margin-bottom:15px; color:#64748b;">"Un site performant commence par une réflexion stratégique."</p>
+                            <ul class="web-list">
+                                <li>Définition de la vocation du site</li>
+                                <li>Message clé à transmettre</li>
+                                <li>Parcours utilisateur optimal</li>
+                                <li>Base SEO solide pour assurer votre visibilité</li>
+                            </ul>
+                        </div>
+                        <div class="web-item">
+                            <i class="fas fa-cogs web-icon"></i>
+                            <h4 class="web-title">Performance & Technologie</h4>
+                            <ul class="web-list" style="margin-top:20px;">
+                                <li>100 % responsive (mobile, tablette, ordinateur)</li>
+                                <li>Optimisés pour la vitesse et la sécurité</li>
+                                <li>Pensés pour évoluer avec votre entreprise</li>
+                                <li>Simples à administrer</li>
+                            </ul>
+                        </div>
+                        <div class="web-item">
+                            <i class="fas fa-handshake web-icon"></i>
+                            <h4 class="web-title">Un Accompagnement Sur-Mesure</h4>
+                            <p style="margin-bottom:15px; color:#334155;">Nous ne livrons pas simplement un site. Nous construisons un actif digital durable.</p>
+                            <ul class="web-list">
+                                <li>Conseil stratégique</li>
+                                <li>Optimisation continue</li>
+                                <li>Vision long terme</li>
+                                <li>Partenaire, pas seulement prestataire</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div style="text-align:center; background:var(--primary); padding:40px; border-radius:16px; color:white;">
+                        <h4 style="color:white; margin-bottom:15px; font-size:1.5rem;">PRÊT À DIGITALISER VOTRE ENTREPRISE ?</h4>
+                        <p style="margin-bottom:30px; color:#cbd5e1;">Discutons de votre projet et établissons un cahier des charges précis.</p>
+                        <button class="btn-action" style="background:white; color:var(--primary); max-width:300px;" onclick="transferWeb()">DEMANDER UNE ÉTUDE WEB</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION PRO -->
+    <section id="pro" class="page-section">
+        <div class="container">
+            <h2 style="text-align:center; margin-bottom:40px;">SOLUTIONS ENTREPRISES</h2>
+            <div class="grid-3">
+                <div class="card" onmouseenter="showDetail('pro-video', 'panel-pro')"><i class="fas fa-video"></i><h3>Vidéosurveillance</h3></div>
+                <div class="card" onmouseenter="showDetail('pro-alarme', 'panel-pro')"><i class="fas fa-bell"></i><h3>Alarme</h3></div>
+                <div class="card" onmouseenter="showDetail('pro-physique', 'panel-pro')"><i class="fas fa-door-closed"></i><h3>Physique</h3></div>
+            </div>
+            <div id="panel-pro" class="info-panel">
+                <div id="pro-video" class="detail-content">
+                    <div class="info-title"><i class="fas fa-eye"></i> VIDÉOPROTECTION 4K</div>
+                    <div class="info-desc">La sécurité par l'image. Nos solutions <strong>4K (Filaire ou Wifi)</strong> assurent une qualité d'enregistrement optimale et un contrôle des mouvements précis. Surveillez votre site à distance via des lignes sécurisées.</div>
+                    <div class="info-subtitle">LES AVANTAGES CLÉS</div>
+                    <ul class="check-list">
+                        <li><i class="fas fa-check"></i> <strong>Efficacité :</strong> Risque d'intrusion diminué de 60%.</li>
+                        <li><i class="fas fa-check"></i> <strong>Accessibilité :</strong> Visionnage sur smartphone 24h/24 7j/7.</li>
+                        <li><i class="fas fa-check"></i> <strong>Technologie :</strong> Liaison cryptée et stockage sécurisé.</li>
+                    </ul>
+                    <div class="info-btn" onclick="transferGeneric('Pro - Vidéo')">DEMANDER UN DEVIS</div>
+                </div>
+                <div id="pro-alarme" class="detail-content" style="display:none;">
+                    <div class="info-title"><i class="fas fa-shield-alt"></i> ALARME HAUTE SÉCURITÉ</div>
+                    <div class="info-desc">Une protection anti-intrusion sur-mesure. Optez pour la <strong>fiabilité absolue du filaire</strong> (indépendant des ondes) ou la <strong>flexibilité du sans-fil</strong> (installation rapide). Technologie certifiée contre les intrusions et incendies.</div>
+                    <div class="info-subtitle">NOS ENGAGEMENTS</div>
+                    <ul class="check-list">
+                        <li><i class="fas fa-check"></i> <strong>Dissuasion :</strong> Systèmes robustes pour faire fuir les intrus.</li>
+                        <li><i class="fas fa-check"></i> <strong>Continuité :</strong> Fonctionnement assuré 24h/24.</li>
+                        <li><i class="fas fa-check"></i> <strong>Expertise :</strong> Installation soignée et maintenance dédiée.</li>
+                    </ul>
+                    <div class="info-btn" onclick="transferGeneric('Pro - Alarme')">DEMANDER UN DEVIS</div>
+                </div>
+                <div id="pro-physique" class="detail-content" style="display:none;">
+                    <div class="info-title"><i class="fas fa-dungeon"></i> PROTECTION PHYSIQUE</div>
+                    <div class="info-desc">Renforcez la sécurité de vos locaux. Nos solutions de <strong>blindage physique</strong> (rideaux métalliques, portes blindées, coffres-forts) constituent la première barrière contre l'effraction, garantissant une résistance certifiée et une dissuasion immédiate.</div>
+                    <div class="info-subtitle">NOS ENGAGEMENTS</div>
+                    <ul class="check-list">
+                        <li><i class="fas fa-check"></i> <strong>Certifications :</strong> Matériel normé A2P/EN conforme aux exigences des assurances.</li>
+                        <li><i class="fas fa-check"></i> <strong>Robustesse :</strong> Motorisations intensives (Somfy/Nice) et matériaux haute résistance.</li>
+                        <li><i class="fas fa-check"></i> <strong>Sur-Mesure :</strong> Fabrication et pose adaptées aux dimensions exactes de vos accès.</li>
+                    </ul>
+                    <div class="info-btn" onclick="transferGeneric('Pro - Physique')">DEMANDER UN DEVIS</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION PARTICULIER -->
+    <section id="particulier" class="page-section">
+        <div class="container">
+            <h2 style="text-align:center; margin-bottom:40px;">SÉRÉNITÉ RÉSIDENTIELLE</h2>
+            <div class="grid-3" style="justify-content:center;">
+                <div class="card" onmouseenter="showDetail('part-alarme', 'panel-part')"><i class="fas fa-shield-cat"></i><h3>Alarme AJAX</h3></div>
+                <div class="card" onmouseenter="showDetail('part-video', 'panel-part')"><i class="fas fa-eye"></i><h3>CAMÉRA</h3></div>
+            </div>
+            <div id="panel-part" class="info-panel">
+                <div id="part-alarme" class="detail-content">
+                    <div class="info-title"><i class="fas fa-shield-alt"></i> ALARME HAUTE SÉCURITÉ</div>
+                    <div class="info-desc">Une protection anti-intrusion sur-mesure. Optez pour la <strong>fiabilité absolue du filaire</strong> ou la <strong>flexibilité du sans-fil</strong>.</div>
+                    <div class="info-btn" onclick="transferGeneric('Particulier - Alarme')">DEMANDER UN DEVIS</div>
+                </div>
+                <div id="part-video" class="detail-content" style="display:none;">
+                    <div class="info-title"><i class="fas fa-eye"></i> VIDÉOPROTECTION 4K</div>
+                    <div class="info-desc">La sécurité par l'image. Nos solutions <strong>4K</strong> assurent une qualité d'enregistrement optimale pour votre domicile.</div>
+                    <div class="info-btn" onclick="transferGeneric('Particulier - Vidéo')">DEMANDER UN DEVIS</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION : QUI SOMMES-NOUS ? -->
+    <section id="about" class="page-section">
+        <div class="container">
+            <h2 style="text-align:center; margin-bottom:10px;">QUI SOMMES-NOUS ?</h2>
+            <p style="text-align:center; font-weight:800; color:var(--accent); text-transform:uppercase; letter-spacing:1px; margin-bottom:40px;">L'Expertise globale au service de votre commerce</p>
+            
+            <div class="about-section-box">
+                <h3 style="margin-bottom:15px; font-size:1.5rem;"><i class="fas fa-building" style="color:var(--accent); margin-right:10px;"></i> Notre Société</h3>
+                <p style="line-height:1.6; color:#334155; margin-bottom:20px;">
+                    <strong>AJS</strong> est le partenaire privilégié des commerçants et entreprises. Nous proposons une synergie unique en regroupant sous une même entité <strong>la Sécurité, l'Agencement et le Marketing Digital</strong>. Notre objectif ? Protéger votre outil de travail tout en boostant votre attractivité visuelle et votre chiffre d'affaires, le tout avec un interlocuteur unique.
+                </p>
+            </div>
+
+            <div class="grid-3" style="margin-bottom:30px;">
+                <div class="card" style="padding:30px; text-align:left;">
+                    <h3 style="font-size:1.2rem; margin-bottom:10px; color:var(--primary);"><i class="fas fa-map-marked-alt"></i> Zone d'Intervention</h3>
+                    <p style="color:#475569; font-size:0.95rem;">Nous accompagnons nos clients partout en <strong>France métropolitaine</strong>. Où que vous soyez, nos équipes se déplacent pour l'audit, l'installation et la maintenance de vos équipements.</p>
+                </div>
+                <div class="card" style="padding:30px; text-align:left;">
+                    <h3 style="font-size:1.2rem; margin-bottom:10px; color:var(--primary);"><i class="fas fa-hand-holding-usd"></i> Accompagnement Subventions</h3>
+                    <p style="color:#475569; font-size:0.95rem;">Nous maîtrisons parfaitement les dispositifs d'aide (<strong>Aide Sécurité Douane, Fonds de Transformation, Aides IDF</strong>). Nous vous garantissons un matériel éligible et un accompagnement dans le montage de vos dossiers.</p>
+                </div>
+                <div class="card" style="padding:30px; text-align:left;">
+                    <h3 style="font-size:1.2rem; margin-bottom:10px; color:var(--primary);"><i class="fas fa-cogs"></i> Des Services 360°</h3>
+                    <p style="color:#475569; font-size:0.95rem;">Alarme, vidéosurveillance, coffres-forts, mais aussi conception d'enseignes, pose de stores bannes, et pilotage d'écrans vitrines avec la création de vos contenus publicitaires. Le tout 100% sur mesure.</p>
+                </div>
+            </div>
+            
+            <div style="text-align:center; margin-top:20px;">
+                <button class="btn-action" style="max-width:250px;" onclick="switchTab('contact')">NOUS CONTACTER</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="page-section">
+        <div class="container">
+            <h2 style="text-align:center;">DEMANDER UNE ÉTUDE</h2>
+            <div class="contact-wrapper">
+                <form id="mainForm" action="https://formsubmit.co/aj.securitegroup@gmail.com" method="POST">
+                    <!-- Redirection (Optionnel : mettez votre vraie page ou laissez vide) -->
+                    <input type="hidden" name="_next" value="https://votre-site.com">
+                    <input type="hidden" name="_subject" value="Nouveau devis AJS !">
+                    <input type="hidden" name="_captcha" value="false">
+
+                    <div class="radio-group">
+                        <label><input type="radio" name="Type_Client" value="Particulier" onclick="toggleF()" checked> Particulier</label>
+                        <label><input type="radio" name="Type_Client" value="Pro" id="radPro" onclick="toggleF()"> Pro / Buraliste</label>
+                    </div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px;">
+                        <input type="text" name="Nom" class="form-input" placeholder="Nom Complet" required>
+                        <input type="email" name="Email" class="form-input" placeholder="Email" required>
+                    </div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px;">
+                        <input type="tel" name="Telephone" class="form-input" placeholder="Téléphone" required>
+                        <input type="text" name="Code_Postal" class="form-input" placeholder="Code Postal">
+                    </div>
+                    
+                    <div id="zPart">
+                        <div class="checkbox-grid">
+                            <label class="checkbox-item"><input type="checkbox" name="Besoin_Particulier" value="Alarme"> Alarme</label>
+                            <label class="checkbox-item"><input type="checkbox" name="Besoin_Particulier" value="Vidéo"> Vidéo</label>
+                        </div>
+                    </div>
+                    <div id="zPro" class="hidden">
+                        <div class="checkbox-grid">
+                            <label class="checkbox-item"><input type="checkbox" name="Besoin_Pro" value="Vidéosurveillance"> Vidéosurveillance</label>
+                            <label class="checkbox-item"><input type="checkbox" name="Besoin_Pro" value="Alarme"> Alarme</label>
+                            <label class="checkbox-item"><input type="checkbox" name="Besoin_Pro" value="Rideau_Coffre"> Rideau / Coffre</label>
+                            <label class="checkbox-item"><input type="checkbox" name="Besoin_Pro" value="Affichage_Dynamique" id="chkScr"> Affichage Dynamique</label>
+                            <label class="checkbox-item"><input type="checkbox" name="Besoin_Pro" value="Store_Enseigne" id="chkStr"> Store / Enseigne</label>
+                            <label class="checkbox-item"><input type="checkbox" name="Besoin_Pro" value="Site_Web"> Site Web</label>
+                        </div>
+                    </div>
+                    <textarea id="msg" name="Message_Projet" class="form-input" rows="4" placeholder="Détails de votre projet..."></textarea>
+                    <button type="submit" class="btn-action">ENVOYER</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<!-- PIED DE PAGE : DOMICILIATION -->
+<footer>
+    <h4>AJS</h4>
+    <p style="font-weight:700; margin-bottom:15px;">Sécurité • Agencement • Marketing</p>
+    <p style="font-size:0.8rem; color:#94a3b8; margin-top:20px;">&copy; 2026 AJS. Tous droits réservés.</p>
+</footer>
+
+<script>
+    /* EFFET SCROLL SUR LE MENU */
+    window.addEventListener('scroll', () => {
+        const header = document.getElementById('main-header');
+        if (document.getElementById('accueil').classList.contains('active')) {
+            if (window.scrollY > 50) {
+                header.style.backgroundColor = 'var(--primary)';
+                header.style.boxShadow = '0 4px 10px rgba(0,0,0,0.3)';
+            } else {
+                header.style.backgroundColor = 'transparent';
+                header.style.boxShadow = 'none';
+            }
+        }
+    });
+
+    /* NAVIGATION */
+    function switchTab(id) { 
+        document.querySelectorAll('.page-section').forEach(e=>e.classList.remove('active')); 
+        document.getElementById(id).classList.add('active'); 
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        
+        const header = document.getElementById('main-header');
+        if(id === 'accueil') {
+            header.style.backgroundColor = 'transparent';
+            header.style.boxShadow = 'none';
+        } else {
+            header.style.backgroundColor = 'var(--primary)'; 
+            header.style.boxShadow = '0 4px 10px rgba(0,0,0,0.3)';
+        }
+        
+        if(id==='marketing'){
+            document.querySelectorAll('.mkt-view').forEach(e=>e.classList.remove('active'));
+            document.getElementById('mkt-hub').classList.add('active');
+        } 
+    }
+    
+    function openTool(id) { document.getElementById('mkt-hub').classList.remove('active'); document.getElementById('tool-'+id).classList.add('active'); }
+    function closeTool() { document.querySelectorAll('.mkt-view').forEach(e=>e.classList.remove('active')); document.getElementById('mkt-hub').classList.add('active'); }
+    function showDetail(cId, pId) { const p=document.getElementById(pId); p.querySelectorAll('.detail-content').forEach(e=>e.style.display='none'); document.getElementById(cId).style.display='block'; p.classList.add('visible'); }
+    
+    /* CALIBRAGE UI */
+    function toggleCalib(id, btn) {
+        const el = document.getElementById(id);
+        if(el.style.display === 'block') {
+            el.style.display = 'none';
+            btn.innerHTML = '<i class="fas fa-ruler-combined"></i> CALIBRER';
+        } else {
+            el.style.display = 'block';
+            btn.innerHTML = '<i class="fas fa-times"></i> FERMER';
+        }
+    }
+    function updateCalib(v, val) { document.documentElement.style.setProperty('--'+v, val+'%'); }
+
+    /* ENSEIGNE */
+    let signConfig = { type: 'caisson', font: 'Montserrat', textColor: '#ffffff', boxColor: '#0f172a' };
+    function setSignColor(target, color) { if(target==='text') signConfig.textColor=color; if(target==='box') signConfig.boxColor=color; updateSign(); }
+    
+    function updateSign() {
+        signConfig.type = document.getElementById('signType').value;
+        signConfig.font = document.getElementById('signFont').value;
+        const txtEl = document.getElementById('signTextDisplay');
+        const cont = document.getElementById('signContainer');
+        
+        const ledCheck = document.getElementById('signLed');
+        const isLed = ledCheck ? ledCheck.checked : false;
+        const ledGroup = document.getElementById('groupSignLed');
+
+        txtEl.innerText = document.getElementById('signText').value || "AJS";
+        txtEl.style.fontFamily = signConfig.font;
+        
+        if(signConfig.type === 'caisson') {
+            document.getElementById('boxColorGroup').style.display='block';
+            if(ledGroup) ledGroup.style.display='none';
+            
+            cont.className = "sign-overlay-container mode-caisson";
+            cont.style.backgroundColor = signConfig.boxColor;
+            txtEl.style.color = signConfig.textColor;
+            txtEl.classList.remove('led-active');
+        } else {
+            document.getElementById('boxColorGroup').style.display='none';
+            if(ledGroup) ledGroup.style.display='block';
+
+            cont.className = "sign-overlay-container mode-relief";
+            cont.style.backgroundColor = 'transparent';
+            
+            if(isLed) {
+                txtEl.classList.add('led-active');
+            } else {
+                txtEl.classList.remove('led-active');
+                txtEl.style.color = signConfig.textColor;
+            }
+        }
+    }
+    updateSign();
+
+    /* STORE */
+    function setAwnColor(c) { document.getElementById('awningFabric').style.backgroundColor=c; document.getElementById('awningValance').style.backgroundColor=c; }
+    
+    function updateAwnText() { 
+        const font = document.getElementById('awnFont').value;
+        const text = document.getElementById('awnInput').value || "AJS";
+        const display = document.getElementById('storeTextDisplay');
+        
+        display.innerText = text;
+        display.style.fontFamily = font;
+    }
+
+    function toggleAwnLed() { const t=document.getElementById('storeTextDisplay'); document.getElementById('awnLed').checked ? t.classList.add('led-active') : t.classList.remove('led-active'); }
+
+    /* ECRAN */
+    function setScreenMode(mode, btn) {
+        document.querySelectorAll('.screen-type-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const cont = document.getElementById('screenContainer');
+        cont.className = `screen-container active mode-${mode}`;
+    }
+
+    /* TRANSFERT CONTACT */
+    function toggleF() { const p=document.getElementById('radPro').checked; document.getElementById('zPro').style.display=p?'block':'none'; document.getElementById('zPart').style.display=p?'none':'block'; }
+    function transferGeneric(s) { switchTab('contact'); document.getElementById('msg').value=`PROJET : ${s}`; if(s.includes('Pro')||s.includes('Buraliste')) { document.getElementById('radPro').click(); toggleF(); } }
+    
+    function transferStore() { 
+        switchTab('contact'); 
+        document.getElementById('radPro').click(); toggleF(); 
+        document.getElementById('chkStr').checked=true; 
+        const font = document.getElementById('awnFont').value;
+        document.getElementById('msg').value=`DEVIS STORE BANNE : Couleur ${document.getElementById('awningFabric').style.backgroundColor}, Police: ${font}`; 
+    }
+    
+    function transferSign() { 
+        switchTab('contact'); 
+        document.getElementById('radPro').click(); toggleF(); 
+        document.getElementById('chkStr').checked=true; 
+        const ledCheck = document.getElementById('signLed');
+        const isLed = (ledCheck && ledCheck.checked && signConfig.type !== 'caisson') ? " + OPTION LUMINEUSE" : "";
+        document.getElementById('msg').value=`DEVIS ENSEIGNE : ${signConfig.type}${isLed}, Police: ${signConfig.font}`; 
+    }
+    
+    function transferScreen() { 
+        switchTab('contact'); 
+        document.getElementById('radPro').click(); toggleF(); 
+        document.getElementById('chkScr').checked=true; 
+        document.getElementById('msg').value=`PROJET AFFICHAGE DYNAMIQUE (Matériel + Création de contenu/vidéos publicitaires).`; 
+    }
+
+    function transferWeb() {
+        switchTab('contact');
+        document.getElementById('radPro').click(); toggleF();
+        document.getElementById('msg').value = "PROJET WEB : Je souhaite une étude pour la création/refonte de mon site internet.";
+    }
+
+    /* SLIDER HEROS */
+    let si=0; const st=document.querySelectorAll('.text-slider');
+    function cyc() { st.forEach(e=>e.classList.remove('active')); si++; if(si>=st.length) si=0; st[si].classList.add('active'); setTimeout(cyc, 4500); } cyc();
+</script>
+
+</body>
+</html>
